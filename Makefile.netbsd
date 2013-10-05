@@ -1,0 +1,16 @@
+.include <bsd.own.mk>
+
+PROG=		xvmware
+SRCS=		xvmware.c \
+		xlanginfo.c \
+		vmbackdoor_wrapper.c \
+		vmbackdoor.c \
+		iconv_wrapper.c
+APPDEFS=	Xvmware.ad
+MKMAN=		no
+
+LDADD+=		-lXmu -lXt
+DPADD+=		${LIBXMU} ${LIBXT}
+
+.include <bsd.x11.mk>
+.include <bsd.prog.mk>

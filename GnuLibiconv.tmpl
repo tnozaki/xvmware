@@ -1,0 +1,21 @@
+#if UseGnuLibiconv
+
+#ifndef GnuLibiconvDir
+#define GnuLibiconvDir /usr/pkg
+#endif
+#ifndef GnuLibiconvLibDir
+#define GnuLibiconvLibDir GnuLibiconvDir/LibDirName
+#endif
+#ifndef GnuLibiconvIncDir
+#define GnuLibiconvIncDir GnuLibiconvDir/include
+#endif
+
+GNULIBICONVDIR = GnuLibiconvDir
+GNULIBICONVLIBDIR = GnuLibiconvLibDir
+GNULIBICONVINCDIR = GnuLibiconvIncDir
+GNULIBICONVLIB = -L$(GNULIBICONVLIBDIR) -Wl,-rpath,$(GNULIBICONVLIBDIR) \
+                 -liconv
+GNULIBICONVINCLUDES = -I$(GNULIBICONVINCDIR)
+GNULIBICONVDEFINES = -DUSE_GNU_LIBICONV
+
+#endif /* UseGnuLibiconv */
