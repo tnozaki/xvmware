@@ -24,8 +24,8 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef _VMBACKDOOR_WRAPPER_H_
-#define _VMBACKDOOR_WRAPPER_H_
+#ifndef VMBACKDOOR_WRAPPER_H_
+#define VMBACKDOOR_WRAPPER_H_
 
 #define VMBD_CLIPBOARD_ENCODING	"UTF-8"
 #define VMBD_PREFERENCE_AUTOGRUB (VMBD_PREFERENCE_GRAB|VMBD_PREFERENCE_UNGRAB)
@@ -37,4 +37,4 @@ void	vmbackdoor_set_cursor(int, int);
 int	vmbackdoor_get_clipboard_by_enc(char **, size_t *, const char *);
 void	vmbackdoor_set_clipboard_by_enc(const char *, size_t, const char *);
 
-#endif /*!_VMBACKDOOR_WRAPPER_H_*/
+#endif /*!VMBACKDOOR_WRAPPER_H_*/

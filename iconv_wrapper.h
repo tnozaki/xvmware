@@ -24,10 +24,10 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef _ICONV_WRAPPER_H_
-#define _ICONV_WRAPPER_H_
+#ifndef ICONV_WRAPPER_H_
+#define ICONV_WRAPPER_H_
 
 int iconv_wrapper(iconv_t, const char * __restrict, size_t,
 	char ** __restrict, size_t * __restrict, size_t * __restrict);
 
-#endif /*!_ICONV_WRAPPER_H_*/
+#endif /*!ICONV_WRAPPER_H_*/

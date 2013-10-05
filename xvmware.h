@@ -25,8 +25,8 @@
  *
  */
 
-#ifndef _XVMWARE_H_
-#define _XVMWARE_H_
+#ifndef XVMWARE_H_
+#define XVMWARE_H_
 
 #define XtNautogrub	"autogrub"
 #define XtCAutogrub	"Autogrub"
@@ -41,4 +41,4 @@ typedef struct _XvmwareClassRec *XvmwareWidgetClass;
 
 extern WidgetClass xvmwareWidgetClass;
 
-#endif /*_XVMWARE_H_*/
+#endif /*!XVMWARE_H_*/

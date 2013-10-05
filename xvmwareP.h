@@ -25,8 +25,8 @@
  *
  */
 
-#ifndef _XVMWARE_PRIVATE_H_
-#define _XVMWARE_PRIVATE_H_
+#ifndef XVMWAREP_H_
+#define XVMWAREP_H_
 
 #include <X11/CoreP.h>
 #include "xvmware.h"
@@ -105,4 +105,4 @@ typedef struct _XvmwareClassRec {
 
 extern XvmwareClassRec xvmwareClassRec;
 
-#endif /*_XVMWARE_PRIVATE_H_*/
+#endif /*!XVMWAREP_H_*/

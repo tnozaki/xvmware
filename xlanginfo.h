@@ -24,8 +24,8 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef _XLANGINFO_H_
-#define _XLANGINFO_H_
+#ifndef XLANGINFO_H_
+#define XLANGINFO_H_
 
 #include <X11/Xfuncproto.h>
 #include <X11/Xosdefs.h>
@@ -49,4 +49,4 @@ _XFUNCPROTOEND
 
 #endif
 
-#endif /*_XLANGINFO_H_*/
+#endif /*!XLANGINFO_H_*/
