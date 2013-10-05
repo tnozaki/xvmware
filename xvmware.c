@@ -143,6 +143,8 @@ SelectionReceived(Widget widget,
 
 	if (*encoding == XT_CONVERT_FAIL)
 		return;
+	if (nitems == NULL || *nitems == 0)
+		return;
 	self = &((XvmwareWidget)widget)->xvmware;
 	display = XtDisplay(widget);
 	window = XtWindow(widget);
