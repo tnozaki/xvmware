@@ -6,8 +6,8 @@ DEPLIBS = $(DEPXMULIB) $(DEPXTOOLLIB) $(DEPGNULIBICONVLIB)
 INCLUDES = $(GNULIBICONVINCLUDES)
 DEFINES = $(GNULIBICONVDEFINES)
 
-SRCS = xvmware.c xlanginfo.c vmbackdoor_wrapper.c vmbackdoor.c iconv_wrapper.c
-OBJS = xvmware.o xlanginfo.o vmbackdoor_wrapper.o vmbackdoor.o iconv_wrapper.o
+SRCS = xvmware.c xlanginfo.c vmbackdoor_wrapper.c vmmouse_proto.c iconv_wrapper.c
+OBJS = xvmware.o xlanginfo.o vmbackdoor_wrapper.o vmmouse_proto.c iconv_wrapper.o
 
 ComplexProgramTargetNoMan(xvmware)
 InstallAppDefaults(Xvmware)

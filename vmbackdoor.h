@@ -59,12 +59,6 @@
 #ifndef _VMBACKDOOR_H_
 #define _VMBACKDOOR_H_
 
-struct vmbackdoor_data {
-  long int eax;
-  long int ebx;
-  long int ecx;
-};
-
 /* backdoor commands */
 #define VMBD_COMMAND_GET_POINTERPOS		0x4L
 #define VMBD_COMMAND_SET_POINTERPOS		0x5L
@@ -96,7 +90,5 @@ struct vmbackdoor_data {
 		(((size) >> 16) & 0xFFFFL)
 #define VMBD_UNPACK_HOSTSCREENSIZE_Y(size) \
 		((size) & 0xFFFFL)
-
-void vmbackdoor(struct vmbackdoor_data *);
 
 #endif /* _VMBACKDOOR_H_ */

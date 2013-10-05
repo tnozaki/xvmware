@@ -4,11 +4,13 @@ PROG=		xvmware
 SRCS=		xvmware.c \
 		xlanginfo.c \
 		vmbackdoor_wrapper.c \
-		vmbackdoor.c \
+		vmmouse_proto.c \
 		iconv_wrapper.c
+
 APPDEFS=	Xvmware.ad
 MKMAN=		no
 
+CFLAGS+=	-g
 LDADD+=		-lXmu -lXt
 DPADD+=		${LIBXMU} ${LIBXT}
 

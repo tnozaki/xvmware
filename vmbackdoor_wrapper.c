@@ -39,6 +39,7 @@
 #include <time.h>
 
 #include "iconv_wrapper.h"
+#include "vmmouse_proto.h"
 #include "vmbackdoor.h"
 #include "vmbackdoor_wrapper.h"
 
@@ -55,7 +56,7 @@ int
 vmbakdoor_check_virtual_machine()
 {
 	struct sigaction act, old;
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 	int ret;
 
 	act.sa_handler = &vmbackdoor_segv_handler;
@@ -64,8 +65,8 @@ vmbakdoor_check_virtual_machine()
 	sigaction(SIGSEGV, &act, &old);
 	ret = sigsetjmp(vmbackdoor_segv_jmp, 1);
 	if (ret == 0) {
-		v.ecx = VMBD_COMMAND_GET_VERSION;
-		vmbackdoor(&v);
+		v.in.command = VMBD_COMMAND_GET_VERSION;
+		VMMouseProto_SendCmd(&v);
 	}
 	sigaction(SIGSEGV, &old, NULL);
 	return ret;
@@ -74,71 +75,71 @@ vmbakdoor_check_virtual_machine()
 void
 vmbackdoor_set_autogrub(int mode)
 {
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 
-	v.ecx = VMBD_COMMAND_GET_PREFERENCES;
-	vmbackdoor(&v);
-	v.ecx = VMBD_COMMAND_SET_PREFERENCES;
-	v.ebx = v.eax;
+	v.in.command = VMBD_COMMAND_GET_PREFERENCES;
+	VMMouseProto_SendCmd(&v);
+	v.in.command = VMBD_COMMAND_SET_PREFERENCES;
+	v.in.size = v.out.vEax;
 	if (mode)
-		v.ebx |= VMBD_PREFERENCE_AUTOGRUB;
+		v.in.size |= VMBD_PREFERENCE_AUTOGRUB;
 	else
-		v.ebx &= ~VMBD_PREFERENCE_AUTOGRUB;
-	vmbackdoor(&v);
+		v.in.size &= ~VMBD_PREFERENCE_AUTOGRUB;
+	VMMouseProto_SendCmd(&v);
 }
 
 void
 vmbackdoor_get_cursor(int * __restrict x, int * __restrict y)
 {
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 
 	DIAGASSERT(x != NULL);
 	DIAGASSERT(y != NULL);
 
-	v.ecx = VMBD_COMMAND_GET_POINTERPOS;
-	vmbackdoor(&v);
-	*x = VMBD_UNPACK_POINTER_X(v.eax);
-	*y = VMBD_UNPACK_POINTER_Y(v.eax);
+	v.in.command = VMBD_COMMAND_GET_POINTERPOS;
+	VMMouseProto_SendCmd(&v);
+	*x = VMBD_UNPACK_POINTER_X(v.out.vEax);
+	*y = VMBD_UNPACK_POINTER_Y(v.out.vEax);
 }
 
 void
 vmbackdoor_set_cursor(int x, int y)
 {
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 
-	v.ecx = VMBD_COMMAND_SET_POINTERPOS;
-	v.ebx = VMBD_PACK_POINTER(x, y);
-	vmbackdoor(&v);
+	v.in.command = VMBD_COMMAND_SET_POINTERPOS;
+	v.in.size = VMBD_PACK_POINTER(x, y);
+	VMMouseProto_SendCmd(&v);
 }
 
 /* XXX FIXME */
 static __inline int
 vmbackdoor_get_clipboard_nc(char ** __restrict ps, int * __restrict pn)
 {
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 	int n;
 	char *s, *t;
 	const char *p;
 
-	v.ecx = VMBD_COMMAND_GET_CLIPBOARDLEN;
-	vmbackdoor(&v);
-	n = v.eax;
+	v.in.command = VMBD_COMMAND_GET_CLIPBOARDLEN;
+	VMMouseProto_SendCmd(&v);
+	n = v.out.vEax;
 	if (n <= 0)
 		return 1;
 	s = malloc(n + 1);
 	if (s == NULL)
 		return 1; /* XXX: FIXME */
 	t = s;
-	v.ecx = VMBD_COMMAND_GET_CLIPBOARDDATA;
-	while (n >= sizeof(v.eax)) {
-		vmbackdoor(&v);
-		p = (const char *)&v.eax;
-		memcpy((void *)t, (const void *)p, sizeof(v.eax));
-		t += sizeof(v.eax), n -= sizeof(v.eax);
+	v.in.command = VMBD_COMMAND_GET_CLIPBOARDDATA;
+	while (n >= sizeof(v.out.vEax)) {
+		VMMouseProto_SendCmd(&v);
+		p = (const char *)&v.out.vEax;
+		memcpy((void *)t, (const void *)p, sizeof(v.out.vEax));
+		t += sizeof(v.out.vEax), n -= sizeof(v.out.vEax);
 	}
 	if (n > 0) {
-		vmbackdoor(&v);
-		p = (const char *)&v.eax;
+		VMMouseProto_SendCmd(&v);
+		p = (const char *)&v.out.vEax;
 		memcpy((void *)t, (const void *)p, (size_t)n);
 		t += n;
 	}
@@ -178,20 +179,20 @@ vmbackdoor_get_clipboard_by_enc(char ** __restrict ps, size_t * __restrict pn,
 static __inline void
 vmbackdoor_set_clipboard_nc(const char *s, int n)
 {
-	struct vmbackdoor_data v;
+	VMMouseProtoCmd v;
 
-	v.ecx = VMBD_COMMAND_SET_CLIPBOARDLEN;
-	v.ebx = n;
-	vmbackdoor(&v);
-	v.ecx = VMBD_COMMAND_SET_CLIPBOARDDATA;
-	while (n >= sizeof(v.ebx)) {
-		memcpy((void *)&v.ebx, (const void *)s, sizeof(v.ebx));
-		vmbackdoor(&v);
-		s += sizeof(v.ebx), n -= sizeof(v.ebx);
+	v.in.command = VMBD_COMMAND_SET_CLIPBOARDLEN;
+	v.in.size = n;
+	VMMouseProto_SendCmd(&v);
+	v.in.command = VMBD_COMMAND_SET_CLIPBOARDDATA;
+	while (n >= sizeof(v.out.vEbx)) {
+		memcpy((void *)&v.out.vEbx, (const void *)s, sizeof(v.out.vEbx));
+		VMMouseProto_SendCmd(&v);
+		s += sizeof(v.out.vEbx), n -= sizeof(v.out.vEbx);
 	}
 	if (n > 0) {
-		memcpy((void *)&v.ebx, (const void *)s, n);
-		vmbackdoor(&v);
+		memcpy((void *)&v.out.vEbx, (const void *)s, n);
+		VMMouseProto_SendCmd(&v);
 	}
 }
 
