@@ -27,8 +27,9 @@
 
 #if defined(__NetBSD__)
 #include <sys/cdefs.h>
+#define UNCONST(ptr)	__UNCONST(ptr)
 #else
-#define __UNCONST(ptr) ((void *)(unsigned long)(const void *)ptr)
+#define UNCONST(ptr)	((void *)(unsigned long)(const void *)ptr)
 #endif
 #include <assert.h>
 #if defined(__NetBSD__)
@@ -92,6 +93,6 @@ Xnl_langinfo(Xnl_item item)
 		s = "";
 	}
 
-	return __UNCONST(s);
+	return UNCONST(s);
 }
 #endif
